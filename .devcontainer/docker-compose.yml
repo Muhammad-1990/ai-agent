@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  workspace:
+    container_name: dev-workspace
+    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    user: root
+    volumes:
+      - ..:/workspace/ai-agent
+    command: sleep infinity
+
+  ollama:
+    container_name: dev-ollama
+    image: ollama/ollama:latest
+    user: root
+    ports:
+      - 11434:11434
+    volumes:
+      - ../volumes/ollama_data:/root/.ollama
+  
+  n8n:
+    container_name: dev-n8n
+    image: docker.n8n.io/n8nio/n8n
+    environment:
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+    user: root
+    ports:
+      - 5678:5678
+    volumes:
+      - ../volumes/n8n_data:/root/.n8n
+      - ../data/n8n:/files
